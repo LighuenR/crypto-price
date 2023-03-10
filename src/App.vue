@@ -5,50 +5,48 @@
     </v-app-bar>
     <v-main>
       <v-container>
-        <v-card class="mx-auto" max-width="400">
-          <v-text-field label="Ingrese nombre de cryptomoneda" >
-          </v-text-field>
-          <v-btn>
-            Enviar
-          </v-btn>
-        </v-card>
-      </v-container>
+    <h1>Get Coin Data</h1>
+    <v-text-field label="Coin name" v-model="coinName" @keydown.enter="$event =>getCoinData()"></v-text-field>
+    <v-btn color="primary" @click="getCoinData()">Get Coin Data</v-btn>
 
-      <v-container>
-        <v-card class="mx-auto" max-width="400" prepend-icon="mdi-home">
-          <template v-slot:title>
-            This is a title
-          </template>
-          <v-card-text>
-            This is content
-          </v-card-text>
-        </v-card>
-      </v-container>
+    <v-card class="mt-12" v-if="coinData.id">
+      <img :src="coinData.image.small" alt="">
+      <v-card-title>{{ coinName.toUpperCase() }}:</v-card-title>
 
-
+      <v-card-text>
+        {{ coinData.description.en }}
+      </v-card-text>
+    </v-card>
+  </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 
-
+import axios from "axios";
 export default {
-  name: 'App',
-
-  components: {
-
+  auth: false,
+  data() {
+    return {
+      coinName: "",
+      coinData: {},
+    };
   },
+  methods: {
+    async getCoinData() {
+      const response = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${this.coinName}`
+      );
 
-  data: () => ({
-    //
-  }),
-}
+      this.coinData = response.data;
+
+      console.log(response.data);
+    },
+  },
+};
 </script>
 
 <style>
-. {
-  padding: 0;
-  margin: ;
-}
+
 </style>
